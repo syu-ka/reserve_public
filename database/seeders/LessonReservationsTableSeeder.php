@@ -2,16 +2,21 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use App\Models\LessonReservation;
+use App\Models\Student;
+use App\Models\Lesson;
 
-class LessonReservationsTableSeeder extends Seeder
-{
-    /**
-     * Run the database seeds.
-     */
-    public function run(): void
-    {
-        //
+class LessonReservationsTableSeeder extends Seeder {
+    public function run(): void {
+        $student = Student::first();
+        $lessons = Lesson::take(2)->get();
+
+        foreach ($lessons as $lesson) {
+            LessonReservation::create([
+                'student_id' => $student->id,
+                'lesson_id' => $lesson->id,
+            ]);
+        }
     }
 }
