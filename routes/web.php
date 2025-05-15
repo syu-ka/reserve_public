@@ -28,4 +28,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/students', [StudentController::class, 'index'])->name('students.index');
 });
 
+Route::middleware(['auth', 'staff'])->group(function () {
+    Route::resource('students', StudentController::class);
+});
+
 require __DIR__.'/auth.php';
