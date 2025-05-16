@@ -8,8 +8,8 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::create('students', function (Blueprint $table) {
-            // $table->id(); // 一意ID（ログインIDにも使う）
-            $table->string('id')->primary(); // 一意ID（ログインIDにも使う）
+            $table->bigIncrements('serial_num'); // 主キー
+            $table->string('id')->unique();       // ログインID
             $table->string('name');
             // $table->date('birth_date');
             $table->string('password');
