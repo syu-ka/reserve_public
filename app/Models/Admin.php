@@ -1,25 +1,20 @@
 <?php
-
 namespace App\Models;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-class Student extends Authenticatable
+class Admin extends Authenticatable
 {
     use Notifiable;
 
-    protected $guard = 'student';
+    protected $guard = 'admin';
 
     protected $fillable = [
-        'id', 'password',
+        'name', 'email', 'password',
     ];
 
     protected $hidden = [
         'password', 'remember_token',
     ];
-
-    protected $primaryKey = 'id';
-    public $incrementing = false;
-    protected $keyType = 'string';
 }
