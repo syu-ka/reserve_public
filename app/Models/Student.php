@@ -2,26 +2,34 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
 class Student extends Authenticatable
 {
-    use Notifiable;
+    use HasFactory;
 
-    protected $guard = 'student';
+    protected $primaryKey = 'serial_num'; // 必要なら指定
+    public $incrementing = true;
 
     protected $fillable = [
-        'id',
-        'name',
-        'password',
+        'id', 'name', 'password'
     ];
 
-    protected $hidden = [
-        'password', 'remember_token',
-    ];
+    public function reservations()
+    {
+        return $this->hasMany(Reservation::class, 'student_serial_num');
+    }
 
-    protected $primaryKey = 'id';
-    public $incrementing = false;// 自動増分ではない
-    protected $keyType = 'string';// 主キーの型が文字列
+    public function fixedSchedules()
+    {
+        return $this->hasMany(FixedSchedule::class, 'student_serial_num');
+    }
+
+    public function tickets()
+    {
+        return $this->hasMany(Ticket::class, 'student_serial_num');
+    }
 }
+
