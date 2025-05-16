@@ -12,7 +12,9 @@ class Student extends Authenticatable
     protected $guard = 'student';
 
     protected $fillable = [
-        'id', 'password',
+        'id',
+        'name',
+        'password',
     ];
 
     protected $hidden = [
@@ -20,6 +22,6 @@ class Student extends Authenticatable
     ];
 
     protected $primaryKey = 'id';
-    public $incrementing = false;
-    protected $keyType = 'string';
+    public $incrementing = false;// 自動増分ではない
+    protected $keyType = 'string';// 主キーの型が文字列
 }

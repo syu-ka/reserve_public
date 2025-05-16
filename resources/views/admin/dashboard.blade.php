@@ -1,14 +1,9 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>管理者ダッシュボード</title>
-</head>
-<body>
-    <h1>ようこそ、管理者ダッシュボードへ！</h1>
+@extends('layouts.admin.app')
 
-    <form method="POST" action="{{ route('admin.logout') }}">
-        @csrf
-        <button type="submit">ログアウト</button>
-    </form>
-</body>
-</html>
+@section('title', '管理者ダッシュボード')
+
+@section('content')
+    <!-- <h1 class="text-2xl font-bold mb-4">管理者ダッシュボードへようこそ</h1>
+    <p>ここでは生徒の管理や授業の設定ができます。</p> -->
+    <h1>管理者ダッシュボード</h1>
+@endsection

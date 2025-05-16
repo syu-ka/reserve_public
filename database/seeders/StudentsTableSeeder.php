@@ -11,9 +11,10 @@ class StudentsTableSeeder extends Seeder {
         $parent = User::where('email', 'parent@example.com')->first();
 
         Student::create([
+            'id' => "aabb0001",
             'name' => '山田 花子',
             'birth_date' => '2013-04-10',
-            'parent_id' => $parent->id,
+            // 'parent_id' => $parent->id,
         ]);
     }
 }

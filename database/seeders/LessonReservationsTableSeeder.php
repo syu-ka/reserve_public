@@ -14,7 +14,7 @@ class LessonReservationsTableSeeder extends Seeder {
 
         foreach ($lessons as $lesson) {
             LessonReservation::create([
-                'student_id' => $student->id,
+                'id' => $student->id,
                 'lesson_id' => $lesson->id,
             ]);
         }

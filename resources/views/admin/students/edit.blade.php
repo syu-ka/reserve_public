@@ -1,0 +1,37 @@
+@extends('layouts.admin.app')
+
+@section('content')
+<div class="max-w-xl mx-auto mt-10">
+    <h2 class="text-xl font-bold mb-4">生徒情報の編集</h2>
+
+    <form action="{{ route('admin.students.update', $student) }}" method="POST">
+        @csrf
+        @method('PUT')
+
+        <div class="mb-4">
+            <label for="id" class="block">生徒ID</label>
+            <input type="text" name="id" id="id" class="w-full border p-2 rounded" value="{{ old('id', $student->id) }}">
+            @error('id')<div class="text-red-600">{{ $message }}</div>@enderror
+        </div>
+
+        <div class="mb-4">
+            <label for="name" class="block">名前</label>
+            <input type="text" name="name" id="name" class="w-full border p-2 rounded" value="{{ old('name', $student->name) }}">
+            @error('name')<div class="text-red-600">{{ $message }}</div>@enderror
+        </div>
+
+        <div class="mb-4">
+            <label for="password" class="block">新しいパスワード（空欄で変更なし）</label>
+            <input type="password" name="password" id="password" class="w-full border p-2 rounded">
+            @error('password')<div class="text-red-600">{{ $message }}</div>@enderror
+        </div>
+
+        <div class="mb-4">
+            <label for="password_confirmation" class="block">パスワード確認</label>
+            <input type="password" name="password_confirmation" id="password_confirmation" class="w-full border p-2 rounded">
+        </div>
+
+        <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">更新</button>
+    </form>
+</div>
+@endsection

@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class LessonReservation extends Model
 {
     protected $fillable = [
-        'student_id',
+        'id',
         'lesson_id',
     ];
 
