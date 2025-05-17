@@ -11,7 +11,7 @@ class Lesson extends Model
     use HasFactory;
 
     protected $fillable = [
-        'title', 'date', 'start_time', 'end_time'
+        'title', 'date', 'weekday', 'start_time', 'required_time', 'capacity','fixed_lesson_id',
     ];
 
     public function reservations()

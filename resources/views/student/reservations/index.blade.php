@@ -19,7 +19,7 @@
                 <td>{{ $reservation->id }}</td>
                 <td>{{ $reservation->lesson->title }}</td>
                 <td>{{ $reservation->lesson->start_time }}</td>
-                <td>{{ $reservation->lesson->end_time }}</td>
+                <td>{{ $reservation->lesson->required_time }}</td>
                 <td>
                     {{-- キャンセル機能など --}}
                     {{-- <form action="{{ route('student.reservations.cancel', $reservation->id) }}" method="POST"> --}}

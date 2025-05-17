@@ -21,7 +21,7 @@
                 <td>{{ $reservation->student->name }}</td>
                 <td>{{ $reservation->lesson->title }}</td>
                 <td>{{ $reservation->lesson->start_time }}</td>
-                <td>{{ $reservation->lesson->end_time }}</td>
+                <td>{{ $reservation->lesson->required_time }}</td>
                 <td>
                     {{-- 編集や削除など --}}
                     {{-- <a href="{{ route('admin.reservations.edit', $reservation->id) }}">編集</a> --}}
