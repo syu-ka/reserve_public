@@ -11,9 +11,11 @@ class LessonsTableSeeder extends Seeder {
         $start = Carbon::parse('next Thursday')->setTime(16, 0);
         for ($i = 0; $i < 3; $i++) {
             Lesson::create([
+                'title' => '英会話レッスン',
                 'start_time' => $start->copy()->addWeeks($i),
                 'end_time' => $start->copy()->addWeeks($i)->addHour(),
-                'capacity' => 5,
+                'capacity' => $i+1, // 最大人数を1, 2, 3とする
+                // 'capacity' => null, // 最大人数を指定しない場合はコメントアウト
             ]);
         }
     }

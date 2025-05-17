@@ -16,8 +16,13 @@ class DatabaseSeeder extends Seeder
         $this->call([
             AdminSeeder::class,
             // UsersTableSeeder::class,
-            // StudentsTableSeeder::class,
-            // LessonsTableSeeder::class,
+            StudentsTableSeeder::class,
+            FixedLessonsTableSeeder::class,
+            LessonsTableSeeder::class,
+            ReservationsTableSeeder::class,
+            LessonLimitsTableSeeder::class,
+            TicketsTableSeeder::class,
+            // 追加のSeederがあればここに追加
         ]);
     }
 }

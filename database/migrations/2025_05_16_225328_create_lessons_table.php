@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('title'); // 授業名（例: プログラミング初級）
             $table->dateTime('start_time'); // 開始日時
             $table->dateTime('end_time');   // 終了日時
-            $table->string('location')->nullable(); // 教室名など（任意）
+            $table->unsignedSmallInteger('capacity')->nullable(); // 最大人数（任意）(非負の整数)
             $table->timestamps();
         });
         
