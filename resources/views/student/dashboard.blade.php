@@ -1,14 +1,6 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>生徒ダッシュボード</title>
-</head>
-<body>
-    <h1>ようこそ、生徒ダッシュボードへ！</h1>
+@extends('layouts.student.app')
 
-    <form method="POST" action="{{ route('student.logout') }}">
-        @csrf
-        <button type="submit">ログアウト</button>
-    </form>
-</body>
-</html>
+@section('content')
+<h1 class="text-2xl font-bold mb-4">生徒ダッシュボードへようこそ</h1>
+    <p>ここでは予約済レッスンの確認や予約ができます。</p>
+@endsection

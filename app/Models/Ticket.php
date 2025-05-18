@@ -13,6 +13,10 @@ class Ticket extends Model
         'student_serial_num',
         'reservation_id',
         'status',
+        'used_at',
+    ];
+    protected $casts = [
+        'used_at' => 'datetime',
     ];
 
     /**

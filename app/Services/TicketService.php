@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Ticket;
 use App\Models\Reservation;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class TicketService
 {
@@ -42,9 +43,9 @@ class TicketService
             return false; // チケットが存在しない場合
         }
 
-        $reservation = Reservation::find($reservationId);
-        if (!$reservation || $reservation->lesson->start_time < Carbon::now()) {
-            return false; // レッスン開始後は払い戻し不可
+        $reservation = Reservation::with('lesson')->find($reservationId);
+        if (!$reservation || Carbon::parse($reservation->lesson->date . ' ' . $reservation->lesson->start_time)->isPast()) {
+            return false;
         }
 
         // チケットの状態を払い戻しに戻す
@@ -55,4 +56,5 @@ class TicketService
 
         return true;
     }
+
 }

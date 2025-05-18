@@ -16,6 +16,7 @@ class Reservation extends Model
     public function student()
     {
         return $this->belongsTo(Student::class, 'student_serial_num');
+        
     }
 
     public function lesson()

@@ -11,7 +11,9 @@ class Student extends Authenticatable
     use HasFactory;
 
     protected $primaryKey = 'serial_num'; // 必要なら指定
-    public $incrementing = true;
+    // public $incrementing = true;
+    public $incrementing = false;
+    protected $keyType = 'int';
 
     protected $fillable = [
         'id', // ログインID（文字列）
@@ -26,7 +28,8 @@ class Student extends Authenticatable
 
     public function reservations()
     {
-        return $this->hasMany(Reservation::class, 'student_serial_num');
+        return $this->hasMany(Reservation::class, 'student_serial_num', 'serial_num');
+        
     }
 
     public function fixedLesson()

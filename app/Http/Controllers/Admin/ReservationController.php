@@ -7,9 +7,17 @@ use Illuminate\Http\Request;
 use App\Models\Reservation;
 use App\Models\Lesson;
 use App\Models\Student;
+use App\Services\TicketService;
 
 class ReservationController extends Controller
 {
+    protected $ticketService;
+
+    public function __construct(TicketService $ticketService)
+    {
+        $this->ticketService = $ticketService;
+    }
+    
     public function index()
     {
         $reservations = Reservation::with('student', 'lesson')->get();
@@ -40,10 +48,23 @@ class ReservationController extends Controller
         return redirect()->route('admin.reservations.index')->with('success', '予約を作成しました');
     }
 
-    public function destroy(Reservation $reservation)
+    /**
+     * 管理者用：予約キャンセル（チケットも払い戻す）
+     */
+    public function destroy($id)
     {
+        $reservation = Reservation::findOrFail($id);
+
+        // チケット払い戻し処理
+        $refunded = $this->ticketService->refundTicket($reservation->id);
+
+        if (!$refunded) {
+            return back()->withErrors(['error' => 'キャンセル期限を過ぎているため、チケットの払い戻しはできません。']);
+        }
+
+        // 予約削除
         $reservation->delete();
 
-        return redirect()->route('admin.reservations.index')->with('success', '予約を削除しました');
+        return redirect()->route('admin.reservations.index')->with('success', '予約をキャンセルしました。');
     }
 }

@@ -38,7 +38,8 @@ class StudentController extends Controller
 
     public function index()
     {
-        $students = Student::paginate(10); // ページネーション付き一覧
+        // fixedLesson をあらかじめ読み込むことでパフォーマンス向上
+        $students = Student::with('fixedLesson')->get();
         return view('admin.students.index', compact('students'));
     }
 

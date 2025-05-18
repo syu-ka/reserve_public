@@ -21,8 +21,8 @@ class AuthenticatedSessionController extends Controller
 
         if (Auth::guard('admin')->attempt($credentials)) {
             $request->session()->regenerate();
-            // return redirect()->intended(route('admin.dashboard'));
-            return redirect()->route('admin.dashboard');
+            // return redirect()->route('admin.dashboard');
+            return redirect()->route('admin.lessons.index');
         }
 
         return back()->withErrors([
