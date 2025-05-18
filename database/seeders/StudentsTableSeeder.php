@@ -16,12 +16,14 @@ class StudentsTableSeeder extends Seeder {
             'id' => "aabb0001",
             'name' => '山田 花子',
             'password' => Hash::make('password123'), // 平文のパスワードをハッシュ化
+            'fixed_lesson_id' => 1,
         ]);
 
         Student::create([
             'id' => "abcd0002",
             'name' => '山田 太郎',
             'password' => Hash::make('password456'), // 平文のパスワードをハッシュ化
+            'fixed_lesson_id' => 2,
         ]);
     }
 }

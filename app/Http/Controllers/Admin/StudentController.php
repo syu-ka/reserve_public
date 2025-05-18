@@ -4,15 +4,16 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Student;
+use App\Models\FixedLesson;
 use Illuminate\Support\Facades\Hash;
 
 class StudentController extends Controller
 {
     public function create()
     {
-        return view('admin.students.create');
+        $fixedLessons = FixedLesson::all();
+        return view('admin.students.create', compact('fixedLessons'));
     }
-
     public function store(Request $request)
     {
         // バリデーションルールを定義
@@ -20,6 +21,7 @@ class StudentController extends Controller
             'id' => 'required|unique:students,id',
             'name' => 'required|string|max:255',
             'password' => 'required|string|min:8|confirmed',
+            'fixed_lesson_id' => 'required|exists:fixed_lessons,id',
         ]);
 
         // 生徒の登録処理
@@ -27,6 +29,7 @@ class StudentController extends Controller
             'id' => $request->id,
             'name' => $request->name,
             'password' => Hash::make($request->password),
+            'fixed_lesson_id' => $request->fixed_lesson_id,
         ]);
 
         // 一覧ページにリダイレクトして、セッションメッセージを渡す
@@ -41,7 +44,8 @@ class StudentController extends Controller
 
     public function edit(Student $student)
     {
-        return view('admin.students.edit', compact('student'));
+        $fixedLessons = FixedLesson::all();
+        return view('admin.students.edit', compact('student', 'fixedLessons'));
     }
 
     public function update(Request $request, Student $student)

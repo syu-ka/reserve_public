@@ -16,4 +16,9 @@ class FixedLesson extends Model
         'required_time',
         'capacity',
     ];
+
+    public function students()
+    {
+        return $this->hasMany(Student::class);
+    }
 }

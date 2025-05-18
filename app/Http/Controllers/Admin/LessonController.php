@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Lesson;
+use App\Models\Reservation;
 use App\Models\FixedLesson;
 use App\Models\Student;
 use App\Models\Ticket;
@@ -31,62 +32,90 @@ class LessonController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'date' => 'required|date',
+            'date' => 'required|date|after_or_equal:today',
         ]);
 
-        $date = \Carbon\Carbon::parse($request->date);
+        $date = Carbon::parse($request->date);
         $weekday = $date->englishDayOfWeek;
+        $warnings = [];
 
-        // 対象の曜日に該当する定期授業すべて取得
-        $fixedLessons = \App\Models\FixedLesson::where('weekday', $weekday)->get();
-        $limit = \App\Models\LessonLimit::first()->max_lessons_per_month ?? 3;
+        $fixedLessons = FixedLesson::where('weekday', $weekday)->get();
 
-        $errors = [];
+        if ($fixedLessons->isEmpty()) {
+            return back()->withErrors(['date' => '指定された曜日には定期授業パターンが存在しません。']);
+        }
 
-        DB::transaction(function () use ($fixedLessons, $date, $limit, &$errors) {
+        DB::transaction(function () use ($fixedLessons, $date, $weekday, &$warnings) {
             foreach ($fixedLessons as $fixed) {
-                // 上限チェック：fixed_lesson_id 単位でチェック
-                $count = \App\Models\Lesson::where('fixed_lesson_id', $fixed->id)
-                    ->whereYear('date', $date->year)
-                    ->whereMonth('date', $date->month)
-                    ->count();
+                // ① 同日・同fixed_lesson_idの授業が既に存在していないか
+                $duplicate = Lesson::where('date', $date->toDateString())
+                    ->where('fixed_lesson_id', $fixed->id)
+                    ->exists();
 
-                if ($count >= $limit) {
-                    $errors[] = "「{$fixed->title}」は今月の上限（{$limit}回）に達しています。";
+                if ($duplicate) {
+                    $warnings[] = "「{$fixed->title}」はすでに{$date->toDateString()}に登録されているため、新たに登録は行いませんでした。";
                     continue;
                 }
 
-                $start = \Carbon\Carbon::parse($date->toDateString() . ' ' . $fixed->start_time);
+                // ② 月ごとのその fixed_lesson_id の登録回数をチェック
+                $count = Lesson::whereYear('date', $date->year)
+                    ->whereMonth('date', $date->month)
+                    ->where('fixed_lesson_id', $fixed->id)
+                    ->count();
 
-                // 授業登録（fixed_lesson_id を追加）
-                $lesson = \App\Models\Lesson::create([
+                $limit = LessonLimit::first()->max_lessons_per_month ?? 3;
+
+                if ($count >= $limit) {
+                    $warnings[] = "「{$fixed->title}」は今月の登録上限（{$limit}回）に達しています。";
+                    continue;
+                }
+
+                $start = Carbon::parse($date->toDateString() . ' ' . $fixed->start_time);
+
+                // 授業登録
+                $lesson = Lesson::create([
                     'title' => $fixed->title,
                     'date' => $date->toDateString(),
                     'start_time' => $start->format('H:i:s'),
                     'required_time' => $fixed->required_time,
                     'capacity' => $fixed->capacity,
-                    'weekday' => $start->englishDayOfWeek,
-                    'fixed_lesson_id' => $fixed->id,  // 🔑 新規追加カラム
+                    'weekday' => $weekday,
+                    'fixed_lesson_id' => $fixed->id,
                 ]);
 
-                // チケット配布（全生徒分）
-                $students = \App\Models\Student::all();
+                // 対象生徒に予約とチケット発行
+                $students = Student::where('fixed_lesson_id', $fixed->id)->get();
+
                 foreach ($students as $student) {
+                    $reservation = \App\Models\Reservation::create([
+                        'student_serial_num' => $student->serial_num,
+                        'lesson_id' => $lesson->id,
+                        'status' => 'reserved',
+                    ]);
+
                     \App\Models\Ticket::create([
                         'student_serial_num' => $student->serial_num,
                         'lesson_id' => $lesson->id,
-                        'status' => 'available',
+                        'reservation_id' => $reservation->id,
+                        'status' => 'used',
+                        'used_at' => now(),
                     ]);
                 }
             }
         });
 
-        if (!empty($errors)) {
-            return back()->withErrors($errors);
-        }
-
-        return redirect()->route('admin.lessons.index')->with('success', '授業とチケットを登録しました。');
+        return redirect()
+            ->route('admin.lessons.index')
+            ->with('success', "{$weekday} の定期授業を登録しました。")
+            ->with('warnings', $warnings);
     }
 
+    public function destroy($id)
+    {
+        $lesson = Lesson::findOrFail($id);
+        $lesson->delete(); // cascadeで予約・チケットも削除される
+
+        return redirect()->route('admin.lessons.index')->with('success', '授業を削除しました。');
+    }
 
 }

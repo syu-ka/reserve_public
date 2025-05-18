@@ -14,7 +14,14 @@ class Student extends Authenticatable
     public $incrementing = true;
 
     protected $fillable = [
-        'id', 'name', 'password'
+        'id', // ログインID（文字列）
+        'name',
+        'password',
+        'fixed_lesson_id',
+    ];
+    protected $hidden = [
+        'password',
+        'remember_token',
     ];
 
     public function reservations()
@@ -22,9 +29,9 @@ class Student extends Authenticatable
         return $this->hasMany(Reservation::class, 'student_serial_num');
     }
 
-    public function fixedSchedules()
+    public function fixedLesson()
     {
-        return $this->hasMany(FixedSchedule::class, 'student_serial_num');
+        return $this->belongsTo(FixedLesson::class);
     }
 
     public function tickets()

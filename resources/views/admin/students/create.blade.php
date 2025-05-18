@@ -27,6 +27,19 @@
         </div>
 
         <div class="mb-4">
+            <label for="fixed_lesson_id" class="block">定期授業パターン</label>
+            <select name="fixed_lesson_id" id="fixed_lesson_id" class="w-full border p-2 rounded">
+                <option value="">選択してください</option>
+                @foreach($fixedLessons as $fixed)
+                    <option value="{{ $fixed->id }}" {{ old('fixed_lesson_id') == $fixed->id ? 'selected' : '' }}>
+                        {{ $fixed->title }}（{{ $fixed->weekday }} {{ \Carbon\Carbon::parse($fixed->start_time)->format('H:i') }}〜）
+                    </option>
+                @endforeach
+            </select>
+            @error('fixed_lesson_id')<div class="text-red-600">{{ $message }}</div>@enderror
+        </div>
+
+        <div class="mb-4">
             <label for="password" class="block">パスワード</label>
             <input type="password" name="password" id="password" class="w-full border p-2 rounded">
             @error('password')<div class="text-red-600">{{ $message }}</div>@enderror
