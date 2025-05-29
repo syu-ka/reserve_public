@@ -21,6 +21,7 @@ class AuthenticatedSessionController extends Controller
 
         if (Auth::guard('admin')->attempt($credentials)) {
             $request->session()->regenerate();
+            // 現在、admin.dashboard.index ルートは存在しないため、コメントアウト.必要になったら復活するMiddlewareの方も同時に修正をすること.app\Http\Middleware\RedirectIfAuthenticated.php
             // return redirect()->route('admin.dashboard');
             return redirect()->route('admin.lessons.index');
         }

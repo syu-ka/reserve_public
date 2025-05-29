@@ -8,6 +8,7 @@ use App\Models\Reservation;
 use App\Models\Lesson;
 use App\Models\Student;
 use App\Services\TicketService;
+use Illuminate\Support\Facades\Auth;
 
 class ReservationController extends Controller
 {
@@ -19,8 +20,16 @@ class ReservationController extends Controller
     }
     
     public function index()
-    {
-        $reservations = Reservation::with('student', 'lesson')->get();
+    {        
+        // 管理者用：全生徒予約一覧（過去は弾く）
+        $reservations = Reservation::whereHas('lesson', function ($query) {
+                $query->where('date', '>=', now()->toDateString());
+            })
+            ->join('lessons', 'reservations.lesson_id', '=', 'lessons.id')
+            ->with('lesson')
+            ->orderBy('lessons.date', 'asc')
+            ->select('reservations.*')
+            ->get();
 
         return view('admin.reservations.index', compact('reservations'));
     }

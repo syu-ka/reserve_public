@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="max-w-xl mx-auto mt-10">
-    <h2 class="text-xl font-bold mb-4">授業日を選んで登録</h2>
+    <h2 class="text-xl font-bold mb-4">レッスン日を選んで登録</h2>
 
     {{-- 成功メッセージ --}}
     @if(session('success'))
@@ -22,18 +22,25 @@
         </div>
     @endif
 
-    {{-- 授業日だけの登録フォーム --}}
+    <div class="ml-4">
+        <p class="text-sm text-gray-700 mb-6">
+            選択した「レッスン日」の<strong>曜日</strong>に該当する全ての「定期レッスン」を一括で作成します。<br>
+            作成されるレッスンには、その定期レッスンに所属する全生徒の<strong>予約が自動で追加</strong>されます。
+        </p>
+    </div>
+
+    {{-- レッスン日だけの登録フォーム --}}
     <form action="{{ route('admin.lessons.store') }}" method="POST">
         @csrf
 
         <div class="mb-4">
-            <label for="date" class="block font-semibold">授業日</label>
+            <label for="date" class="block font-semibold">レッスン日</label>
             <input type="date" name="date" id="date" value="{{ old('date') }}" class="w-full border p-2 rounded">
         </div>
 
-        <div class="mt-6">
-            <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded">
-                授業を登録
+        <div class="flex justify-end">
+            <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+                登録する
             </button>
         </div>
     </form>

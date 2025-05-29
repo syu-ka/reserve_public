@@ -22,6 +22,7 @@ class AuthenticatedSessionController extends Controller
 
         if (Auth::guard('student')->attempt($credentials)) {
             $request->session()->regenerate();
+            // 現在、student.dashboard.index ルートは存在しないため、コメントアウト.必要になったら復活する.Middlewareの方も同時に修正をすること.app\Http\Middleware\RedirectIfAuthenticated.php
             // return redirect()->route('student.dashboard');
             return redirect()->route('student.reservations.index');
         }

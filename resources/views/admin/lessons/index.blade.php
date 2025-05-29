@@ -69,7 +69,7 @@
 
                     <td class="px-4 py-2">{{ $lesson->required_time }}分</td>
                     <td class="px-4 py-2">{{ $lesson->capacity }}名</td>
-                    <td class="px-4 py-2">{{ $lesson->reservations_count ?? 0 }}名</td>
+                    <td class="px-4 py-2">{{ $lesson->reservations_count }}名</td>
 
                     <td class="px-4 py-2">
                         <form action="{{ route('admin.lessons.destroy', $lesson->id) }}" method="POST"
