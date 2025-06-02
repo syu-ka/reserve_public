@@ -1,4 +1,4 @@
-### RESERVATION_PUBLIC とは
+# RESERVATION_PUBLIC とは
 
 塾や習い事用のレッスン予約システムです。
 LESSON_RESERVATION リポジトリを後継になります。
